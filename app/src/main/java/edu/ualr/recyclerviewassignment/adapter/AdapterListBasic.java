@@ -40,7 +40,19 @@ public class AdapterListBasic extends RecyclerView.Adapter {
         DeviceViewHolder viewHolder = (DeviceViewHolder) holder;
         Device d = mItems.get(position);
         viewHolder.name.setText(d.getName());
-        viewHolder.status.setText(d.getDeviceStatus().toString());
+        //viewHolder.status.setText(d.getDeviceStatus().toString());
+
+        if (d.getLastConnection() == null) {
+            viewHolder.status.setText(R.string.never_connected);
+        }
+        else {
+            viewHolder.status.setText(R.string.currently_connected);
+        }
+
+        if (viewHolder.status.getText().toString().matches("Never connected")) {
+            viewHolder.statusMark.setImageResource(R.drawable.status_mark_ready);
+        }
+
         if (d.getName().contains(Device.DeviceType.Unknown.toString())) {
             Tools.displayImageRound(mContext, viewHolder.deviceImage, R.drawable.ic_unknown_device);
         }
@@ -74,6 +86,7 @@ public class AdapterListBasic extends RecyclerView.Adapter {
         public TextView name;
         public TextView status;
         public View lyt_parent;
+        public ImageView statusMark;
 
         public DeviceViewHolder(View v) {
             super(v);
@@ -81,6 +94,7 @@ public class AdapterListBasic extends RecyclerView.Adapter {
             name = v.findViewById(R.id.name);
             status = v.findViewById(R.id.status);
             lyt_parent = v.findViewById(R.id.lyt_parent);
+            statusMark = v.findViewById(R.id.status_mark);
         }
     }
 }
