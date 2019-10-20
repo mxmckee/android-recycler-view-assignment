@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Random;
 
 import edu.ualr.recyclerviewassignment.model.Device;
+import edu.ualr.recyclerviewassignment.model.Item;
 
 /**
  * Created by irconde on 2019-10-04.
@@ -19,13 +20,13 @@ public class DataGenerator {
         return r.nextInt((max - min) + 1) + min;
     }
 
-    public static List<Device> getDevicesDataset(int datasetSize) {
+    public static List<Item> getDevicesDataset(int datasetSize) {
         Device device;
         Device section;
         String id;
         Device.DeviceStatus status;
         Device.DeviceType type;
-        List<Device> items = new ArrayList<>();
+        List<Item> items = new ArrayList<>();
         for (int i = 0; i < datasetSize; i++) {
             type = Device.DeviceType.values()[randInt(6)];
             id = type.toString() + "-" + String.valueOf(i);
