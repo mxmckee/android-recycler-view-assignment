@@ -61,8 +61,8 @@ public class AdapterListBasic extends RecyclerView.Adapter {
         if (holder instanceof DeviceViewHolder) {
             DeviceViewHolder viewHolder = (DeviceViewHolder) holder;
             Device d = (Device) item;
+
             viewHolder.name.setText(d.getName());
-            //viewHolder.status.setText(d.getDeviceStatus().toString());
 
             if (d.getLastConnection() == null) {
                 viewHolder.status.setText(R.string.never_connected);
@@ -71,8 +71,17 @@ public class AdapterListBasic extends RecyclerView.Adapter {
                 viewHolder.status.setText(R.string.currently_connected);
             }
 
-            if (viewHolder.status.getText().toString().matches("Never connected")) {
+            if (d.getDeviceStatus().toString().matches(Device.DeviceStatus.Connected.name())) {
+                viewHolder.statusMark.setImageResource(R.drawable.status_mark_connected);
+                viewHolder.connectionImage.setImageResource(R.drawable.ic_btn_disconnect);
+            }
+            else if (d.getDeviceStatus().toString().matches(Device.DeviceStatus.Ready.name())) {
                 viewHolder.statusMark.setImageResource(R.drawable.status_mark_ready);
+                viewHolder.connectionImage.setImageResource(R.drawable.ic_btn_connect);
+            }
+            else {
+                viewHolder.statusMark.setImageResource(android.R.color.transparent);
+                viewHolder.connectionImage.setImageResource(android.R.color.transparent);
             }
 
             if (d.getName().contains(Device.DeviceType.Unknown.toString())) {
@@ -116,6 +125,7 @@ public class AdapterListBasic extends RecyclerView.Adapter {
         public TextView status;
         public View lyt_parent;
         public ImageView statusMark;
+        public ImageView connectionImage;
 
         public DeviceViewHolder(@NonNull View v) {
             super(v);
@@ -124,6 +134,7 @@ public class AdapterListBasic extends RecyclerView.Adapter {
             status = v.findViewById(R.id.status);
             lyt_parent = v.findViewById(R.id.lyt_parent);
             statusMark = v.findViewById(R.id.status_mark);
+            connectionImage = v.findViewById(R.id.connection_image);
         }
     }
 

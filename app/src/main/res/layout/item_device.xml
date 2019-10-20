@@ -41,7 +41,8 @@
             android:layout_height="wrap_content"
             android:textAllCaps="true"
             android:layout_toEndOf="@+id/image_group"
-            android:layout_marginTop="13dp"/>
+            android:layout_marginTop="11dp"
+            android:text="@string/desktop_pc" />
 
         <TextView
             android:id="@+id/status"
@@ -52,7 +53,8 @@
             android:textColor="@color/grey_30"
             app:drawableTint="@color/grey_30"
             android:layout_toEndOf="@+id/image_group"
-            android:layout_below="@+id/name" />
+            android:layout_below="@+id/name"
+            android:text="@string/never_connected"/>
 
         <ImageView
             android:id="@+id/connection_image"
@@ -61,7 +63,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="25dp"
             android:layout_marginTop="20dp"
-            android:src="@drawable/ic_btn_connect" />
+            android:src="@drawable/ic_btn_disconnect" />
 
         <View
             android:layout_width="wrap_content"
@@ -69,6 +71,6 @@
             android:background="@color/grey_10"
             android:layout_below="@+id/image_group"
             android:layout_marginStart="80dp"
-            android:layout_marginTop="@dimen/spacing_middle"/>
+            android:layout_marginTop="8dp"/>
     </RelativeLayout>
 </LinearLayout>
