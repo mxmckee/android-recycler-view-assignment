@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Date;
 import java.util.List;
 
 import edu.ualr.recyclerviewassignment.R;
@@ -22,6 +23,16 @@ public class AdapterListBasic extends RecyclerView.Adapter {
 
     private static final int DEVICE_VIEW = 0;
     private static final int HEADER_VIEW = 1;
+
+    private OnItemClickListener mOnItemClickListener;
+
+    public interface OnItemClickListener {
+        void onItemClick(View view, Device obj, int position);
+    }
+
+    public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
+        this.mOnItemClickListener = mItemClickListener;
+    }
 
     private final List<Item> mItems;
     private final Context mContext;
@@ -64,11 +75,16 @@ public class AdapterListBasic extends RecyclerView.Adapter {
 
             viewHolder.name.setText(d.getName());
 
-            if (d.getLastConnection() == null) {
+            if (d.getDeviceStatus().toString().matches(Device.DeviceStatus.Connected.name())) {
+                viewHolder.status.setText(R.string.currently_connected);
+                Date currDate = new Date();
+                d.setLastConnection(currDate);
+            }
+            else if (d.getLastConnection() == null) {
                 viewHolder.status.setText(R.string.never_connected);
             }
             else {
-                viewHolder.status.setText(R.string.currently_connected);
+                viewHolder.status.setText(R.string.recently);
             }
 
             if (d.getDeviceStatus().toString().matches(Device.DeviceStatus.Connected.name())) {
@@ -135,6 +151,12 @@ public class AdapterListBasic extends RecyclerView.Adapter {
             lyt_parent = v.findViewById(R.id.lyt_parent);
             statusMark = v.findViewById(R.id.status_mark);
             connectionImage = v.findViewById(R.id.connection_image);
+            lyt_parent.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mOnItemClickListener.onItemClick(view, (Device) mItems.get(getLayoutPosition()), getLayoutPosition());
+                }
+            });
         }
     }
 
