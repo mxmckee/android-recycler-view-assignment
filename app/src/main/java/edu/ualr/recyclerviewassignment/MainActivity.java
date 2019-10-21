@@ -1,7 +1,6 @@
 package edu.ualr.recyclerviewassignment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -20,8 +19,6 @@ import edu.ualr.recyclerviewassignment.model.SectionHeader;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     private AdapterListBasic mAdapter;
     private RecyclerView recyclerView;
 
@@ -36,14 +33,17 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRecyclerView(){
         // TODO. Create and initialize the RecyclerView instance here
+
+        //Store items in a temporary list, tempList
         List<Item> tempList = new ArrayList<>();
         tempList.addAll(items);
 
+        //Remove items from items
         for (int i = items.size() - 1; i >= 0; i--) {
             items.remove(i);
         }
 
-        //Arranges items according to connection status
+        //Repopulates items by arranging items according to connection status
         items = sortList(items, tempList);
 
         mAdapter = new AdapterListBasic(this, items);
@@ -57,23 +57,17 @@ public class MainActivity extends AppCompatActivity {
         mAdapter.setOnItemClickListener(new AdapterListBasic.OnItemClickListener() {
             @Override
             public void onItemClick(View view, Device obj, int position) {
-                Log.d(TAG, String.format("The user has tapped on %s", obj.getName()));
+                //Update last connection
+                updateLastConnection(obj);
 
-                if (obj.getDeviceStatus().toString().matches(Device.DeviceStatus.Ready.name())) {
-                    obj.setDeviceStatus(Device.DeviceStatus.Connected);
-                    Date currDate = new Date();
-                    obj.setLastConnection(currDate);
-                }
-                else if (obj.getDeviceStatus().toString().matches(Device.DeviceStatus.Connected.name())) {
-                    obj.setDeviceStatus(Device.DeviceStatus.Ready);
-                }
-
+                //Reinitialize RecyclerView with updated information
                 initRecyclerView();
             }
         });
     }
 
     private List<Item> sortList(List<Item> items, List<Item> tempList) {
+        //Search for items with a connected status
         for (int i = 0; i < tempList.size(); i++) {
             if (!tempList.get(i).isSection()) {
                 if (((Device) tempList.get(i)).getDeviceStatus().toString().matches(Device.DeviceStatus.Connected.name())) {
@@ -81,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        //Search for items with a ready status
         for (int i = 0; i < tempList.size(); i++) {
             if (!tempList.get(i).isSection()) {
                 if (((Device) tempList.get(i)).getDeviceStatus().toString().matches(Device.DeviceStatus.Ready.name())) {
@@ -88,6 +83,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
+        //Search for items with a linked status
         for (int i = 0; i < tempList.size(); i++) {
             if (!tempList.get(i).isSection()) {
                 if (((Device) tempList.get(i)).getDeviceStatus().toString().matches(Device.DeviceStatus.Linked.name())) {
@@ -124,7 +120,17 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }
-
         return items;
+    }
+
+    private void updateLastConnection(Device obj) {
+        if (obj.getDeviceStatus().toString().matches(Device.DeviceStatus.Ready.name())) {
+            obj.setDeviceStatus(Device.DeviceStatus.Connected);
+            Date currDate = new Date();
+            obj.setLastConnection(currDate);
+        }
+        else if (obj.getDeviceStatus().toString().matches(Device.DeviceStatus.Connected.name())) {
+            obj.setDeviceStatus(Device.DeviceStatus.Ready);
+        }
     }
 }

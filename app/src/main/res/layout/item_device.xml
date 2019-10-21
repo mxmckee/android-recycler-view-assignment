@@ -18,13 +18,24 @@
             android:layout_height="wrap_content">
 
             <ImageView
-                android:id="@+id/device_image"
+                android:id="@+id/background"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:layout_marginLeft="@dimen/spacing_large"
                 android:layout_marginTop="@dimen/margin_small"
                 android:layout_marginRight="@dimen/spacing_large"
-                android:src="@drawable/ic_pc" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/outlined_circle"/>
+
+            <ImageView
+                android:id="@+id/device_image"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginTop="18dp"
+                android:layout_marginRight="@dimen/spacing_large"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_pc_linked" />
 
             <ImageView
                 android:id="@+id/status_mark"

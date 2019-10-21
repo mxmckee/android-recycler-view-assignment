@@ -17,7 +17,6 @@ import edu.ualr.recyclerviewassignment.R;
 import edu.ualr.recyclerviewassignment.model.Device;
 import edu.ualr.recyclerviewassignment.model.Item;
 import edu.ualr.recyclerviewassignment.model.SectionHeader;
-import edu.ualr.recyclerviewassignment.utils.Tools;
 
 public class AdapterListBasic extends RecyclerView.Adapter {
 
@@ -75,58 +74,100 @@ public class AdapterListBasic extends RecyclerView.Adapter {
 
             viewHolder.name.setText(d.getName());
 
-            if (d.getDeviceStatus().toString().matches(Device.DeviceStatus.Connected.name())) {
-                viewHolder.status.setText(R.string.currently_connected);
-                Date currDate = new Date();
-                d.setLastConnection(currDate);
-            }
-            else if (d.getLastConnection() == null) {
-                viewHolder.status.setText(R.string.never_connected);
-            }
-            else {
-                viewHolder.status.setText(R.string.recently);
-            }
+            //Set last connection
+            setDeviceLastConnection(viewHolder, d);
 
-            if (d.getDeviceStatus().toString().matches(Device.DeviceStatus.Connected.name())) {
-                viewHolder.statusMark.setImageResource(R.drawable.status_mark_connected);
-                viewHolder.connectionImage.setImageResource(R.drawable.ic_btn_disconnect);
-            }
-            else if (d.getDeviceStatus().toString().matches(Device.DeviceStatus.Ready.name())) {
-                viewHolder.statusMark.setImageResource(R.drawable.status_mark_ready);
-                viewHolder.connectionImage.setImageResource(R.drawable.ic_btn_connect);
-            }
-            else {
-                viewHolder.statusMark.setImageResource(android.R.color.transparent);
-                viewHolder.connectionImage.setImageResource(android.R.color.transparent);
-            }
+            //Set status mark
+            setStatusMark(viewHolder, d);
 
-            if (d.getName().contains(Device.DeviceType.Unknown.toString())) {
-                Tools.displayImageRound(mContext, viewHolder.deviceImage, R.drawable.ic_unknown_device);
-            }
-            else if (d.getName().contains(Device.DeviceType.Desktop.toString())) {
-                Tools.displayImageRound(mContext, viewHolder.deviceImage, R.drawable.ic_pc);
-            }
-            else if (d.getName().contains(Device.DeviceType.Laptop.toString())) {
-                Tools.displayImageRound(mContext, viewHolder.deviceImage, R.drawable.ic_laptop);
-            }
-            else if (d.getName().contains(Device.DeviceType.Tablet.toString())) {
-                Tools.displayImageRound(mContext, viewHolder.deviceImage, R.drawable.ic_tablet_android);
-            }
-            else if (d.getName().contains(Device.DeviceType.Smartphone.toString())) {
-                Tools.displayImageRound(mContext, viewHolder.deviceImage, R.drawable.ic_phone_android);
-            }
-            else if (d.getName().contains(Device.DeviceType.SmartTV.toString())) {
-                Tools.displayImageRound(mContext, viewHolder.deviceImage, R.drawable.ic_tv);
-            }
-            else {
-                Tools.displayImageRound(mContext, viewHolder.deviceImage, R.drawable.ic_gameconsole);
-            }
+            //Set RecyclerView device ImageView
+            setDeviceImage(viewHolder, d);
         }
         else {
             //Instance of SectionHeaderViewHolder
             SectionHeaderViewHolder viewHolder = (SectionHeaderViewHolder) holder;
             SectionHeader section = (SectionHeader) item;
             viewHolder.label.setText(section.getLabel());
+        }
+    }
+
+    private void setDeviceLastConnection(DeviceViewHolder viewHolder, Device d) {
+        if (d.getDeviceStatus().toString().matches(Device.DeviceStatus.Connected.name())) {
+            viewHolder.status.setText(R.string.currently_connected);
+            Date currDate = new Date();
+            d.setLastConnection(currDate);
+        }
+        else if (d.getLastConnection() == null) {
+            viewHolder.status.setText(R.string.never_connected);
+        }
+        else {
+            viewHolder.status.setText(R.string.recently);
+        }
+    }
+
+    private void setStatusMark(DeviceViewHolder viewHolder, Device d) {
+        if (d.getDeviceStatus().toString().matches(Device.DeviceStatus.Connected.name())) {
+            viewHolder.statusMark.setImageResource(R.drawable.status_mark_connected);
+            viewHolder.connectionImage.setImageResource(R.drawable.ic_btn_disconnect);
+        }
+        else if (d.getDeviceStatus().toString().matches(Device.DeviceStatus.Ready.name())) {
+            viewHolder.statusMark.setImageResource(R.drawable.status_mark_ready);
+            viewHolder.connectionImage.setImageResource(R.drawable.ic_btn_connect);
+        }
+        else {
+            viewHolder.statusMark.setImageResource(android.R.color.transparent);
+            viewHolder.connectionImage.setImageResource(android.R.color.transparent);
+        }
+    }
+
+    private void setDeviceImage(DeviceViewHolder viewHolder, Device d) {
+        if (d.getDeviceStatus().toString().matches(Device.DeviceStatus.Linked.name())) {
+            viewHolder.background.setImageResource(R.drawable.outlined_circle);
+            if (d.getName().contains(Device.DeviceType.Unknown.toString())) {
+                viewHolder.deviceImage.setImageResource(R.drawable.ic_unknown_device_linked);
+            }
+            else if (d.getName().contains(Device.DeviceType.Desktop.toString())) {
+                viewHolder.deviceImage.setImageResource(R.drawable.ic_pc_linked);
+            }
+            else if (d.getName().contains(Device.DeviceType.Laptop.toString())) {
+                viewHolder.deviceImage.setImageResource(R.drawable.ic_laptop_linked);
+            }
+            else if (d.getName().contains(Device.DeviceType.Tablet.toString())) {
+                viewHolder.deviceImage.setImageResource(R.drawable.ic_tablet_android_linked);
+            }
+            else if (d.getName().contains(Device.DeviceType.Smartphone.toString())) {
+                viewHolder.deviceImage.setImageResource(R.drawable.ic_phone_android_linked);
+            }
+            else if (d.getName().contains(Device.DeviceType.SmartTV.toString())) {
+                viewHolder.deviceImage.setImageResource(R.drawable.ic_tv_linked);
+            }
+            else {
+                viewHolder.deviceImage.setImageResource(R.drawable.ic_gameconsole_linked);
+            }
+        }
+        else {
+            viewHolder.background.setImageResource(R.drawable.solid_circle);
+            if (d.getName().contains(Device.DeviceType.Unknown.toString())) {
+                viewHolder.deviceImage.setImageResource(R.drawable.ic_unknown_device);
+            }
+            else if (d.getName().contains(Device.DeviceType.Desktop.toString())) {
+                viewHolder.deviceImage.setImageResource(R.drawable.ic_pc);
+            }
+            else if (d.getName().contains(Device.DeviceType.Laptop.toString())) {
+                viewHolder.deviceImage.setImageResource(R.drawable.ic_laptop);
+            }
+            else if (d.getName().contains(Device.DeviceType.Tablet.toString())) {
+                viewHolder.deviceImage.setImageResource(R.drawable.ic_tablet_android);
+            }
+            else if (d.getName().contains(Device.DeviceType.Smartphone.toString())) {
+                viewHolder.deviceImage.setImageResource(R.drawable.ic_phone_android);
+            }
+            else if (d.getName().contains(Device.DeviceType.SmartTV.toString())) {
+                viewHolder.deviceImage.setImageResource(R.drawable.ic_tv);
+            }
+            else {
+                viewHolder.deviceImage.setImageResource(R.drawable.ic_gameconsole);
+            }
         }
     }
 
@@ -142,6 +183,7 @@ public class AdapterListBasic extends RecyclerView.Adapter {
         public View lyt_parent;
         public ImageView statusMark;
         public ImageView connectionImage;
+        public ImageView background;
 
         public DeviceViewHolder(@NonNull View v) {
             super(v);
@@ -151,6 +193,7 @@ public class AdapterListBasic extends RecyclerView.Adapter {
             lyt_parent = v.findViewById(R.id.lyt_parent);
             statusMark = v.findViewById(R.id.status_mark);
             connectionImage = v.findViewById(R.id.connection_image);
+            background = v.findViewById(R.id.background);
             lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
