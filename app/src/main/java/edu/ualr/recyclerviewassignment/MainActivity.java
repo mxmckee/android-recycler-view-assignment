@@ -1,9 +1,13 @@
 package edu.ualr.recyclerviewassignment;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
     private AdapterListBasic mAdapter;
     private RecyclerView recyclerView;
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String FRAGMENT_TAG = "BottomSheetDialog";
 
     List<Item> items = DataGenerator.getDevicesDataset(5);
 
@@ -28,7 +34,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
         initRecyclerView();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
     }
 
     private void initRecyclerView(){
@@ -48,13 +64,43 @@ public class MainActivity extends AppCompatActivity {
 
         mAdapter = new AdapterListBasic(this, items);
 
-        recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        recyclerView = (RecyclerView) findViewById(R.id.devices_recycler_view);
         recyclerView.setAdapter(mAdapter);
 
         LinearLayoutManager linearVertical = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(linearVertical);
 
         mAdapter.setOnItemClickListener(new AdapterListBasic.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, Device obj, int position) {
+
+                Bundle bundle = new Bundle();
+
+                bundle.putString("DEVICE_TYPE", obj.getDeviceType().name().toString());
+                bundle.putString("DEVICE_NAME", obj.getName().toString());
+                bundle.putString("DEVICE_STATUS", obj.getDeviceStatus().toString());
+
+                String lastConnection;
+                if (obj.getDeviceStatus().toString().matches(Device.DeviceStatus.Connected.name())) {
+                    Date currDate = new Date();
+                    obj.setLastConnection(currDate);
+                    lastConnection = getResources().getString(R.string.currently_connected);
+                }
+                else if (obj.getLastConnection() == null) {
+                    lastConnection = getResources().getString(R.string.never_connected);
+                }
+                else {
+                    lastConnection = getResources().getString(R.string.recently);
+                }
+                bundle.putString("DEVICE_LAST_CONNECTION", lastConnection);
+
+                CustomBottomSheetDialogFragment dialog = new CustomBottomSheetDialogFragment();
+                dialog.show(getSupportFragmentManager(), FRAGMENT_TAG);
+                dialog.setArguments(bundle);
+            }
+        });
+
+        mAdapter.setOnButtonClickListener(new AdapterListBasic.OnButtonClickListener() {
             @Override
             public void onItemClick(View view, Device obj, int position) {
                 //Update last connection
@@ -131,6 +177,23 @@ public class MainActivity extends AppCompatActivity {
         }
         else if (obj.getDeviceStatus().toString().matches(Device.DeviceStatus.Connected.name())) {
             obj.setDeviceStatus(Device.DeviceStatus.Ready);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.connect_action:
+                mAdapter.connectAll();
+                initRecyclerView();
+                return true;
+            case R.id.disconnect_action:
+                mAdapter.disconnectAll();
+                initRecyclerView();
+                return true;
+            case R.id.show_linked_action:
+                return true;
+            default: return super.onOptionsItemSelected(item);
         }
     }
 }

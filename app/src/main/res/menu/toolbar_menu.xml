@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/connect_action"
+        android:title="@string/connect_all_label"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/disconnect_action"
+        android:title="@string/disconnect_all_label"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/show_linked_action"
+        android:title="@string/show_linked_label"
+        app:showAsAction="never"/>
+</menu>

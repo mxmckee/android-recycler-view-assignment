@@ -24,13 +24,24 @@ public class AdapterListBasic extends RecyclerView.Adapter {
     private static final int HEADER_VIEW = 1;
 
     private OnItemClickListener mOnItemClickListener;
+    private OnButtonClickListener mOnButtonClickListener;
+
+    private static final String TAG = AdapterListBasic.class.getSimpleName();
 
     public interface OnItemClickListener {
         void onItemClick(View view, Device obj, int position);
     }
 
+    public interface OnButtonClickListener {
+        void onItemClick(View view, Device obj, int position);
+    }
+
     public void setOnItemClickListener(final OnItemClickListener mItemClickListener) {
         this.mOnItemClickListener = mItemClickListener;
+    }
+
+    public void setOnButtonClickListener(final OnButtonClickListener mButtonClickListener) {
+        this.mOnButtonClickListener = mButtonClickListener;
     }
 
     private final List<Item> mItems;
@@ -194,12 +205,28 @@ public class AdapterListBasic extends RecyclerView.Adapter {
             statusMark = v.findViewById(R.id.status_mark);
             connectionImage = v.findViewById(R.id.connection_image);
             background = v.findViewById(R.id.background);
+            connectionImage.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mOnButtonClickListener.onItemClick(view, (Device) mItems.get(getLayoutPosition()), getLayoutPosition());
+                }
+            });
             lyt_parent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     mOnItemClickListener.onItemClick(view, (Device) mItems.get(getLayoutPosition()), getLayoutPosition());
                 }
             });
+        }
+
+        public void hideLinkedDevices() {
+            for (int i = 0; i < mItems.size(); i++) {
+                if(!mItems.get(i).isSection()) {
+                    if (!((Device) mItems.get(i)).getDeviceStatus().toString().matches(Device.DeviceStatus.Linked.toString())) {
+                        itemView.setVisibility(View.GONE);
+                    }
+                }
+            }
         }
     }
 
@@ -209,6 +236,26 @@ public class AdapterListBasic extends RecyclerView.Adapter {
         public SectionHeaderViewHolder(@NonNull View itemView) {
             super(itemView);
             this.label = itemView.findViewById(R.id.title_section);
+        }
+    }
+
+    public void connectAll() {
+        for (int i = 0; i < mItems.size(); i++) {
+            if(!mItems.get(i).isSection()) {
+                if (!((Device) mItems.get(i)).getDeviceStatus().toString().matches(Device.DeviceStatus.Linked.toString())) {
+                    ((Device) mItems.get(i)).setDeviceStatus(Device.DeviceStatus.Connected);
+                }
+            }
+        }
+    }
+
+    public void disconnectAll() {
+        for (int i = 0; i < mItems.size(); i++) {
+            if(!mItems.get(i).isSection()) {
+                if (!((Device) mItems.get(i)).getDeviceStatus().toString().matches(Device.DeviceStatus.Linked.toString())) {
+                    ((Device) mItems.get(i)).setDeviceStatus(Device.DeviceStatus.Ready);
+                }
+            }
         }
     }
 }
