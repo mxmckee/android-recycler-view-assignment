@@ -6,22 +6,12 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        app:layout_constraintTop_toTopOf="parent"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
-
+    <!-- TODO: Include RecyclerView widget here -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/devices_recycler_view"
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:scrollbars="vertical"
-        android:scrollingCache="true"
-        app:layout_constraintTop_toBottomOf="@id/toolbar"/>
+        android:scrollingCache="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
